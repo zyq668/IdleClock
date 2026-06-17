@@ -81,3 +81,8 @@ location.reload();
 ## 为什么 V1 不是 Windows 屏保
 
 V1 的重点是先把时钟本身做成稳定、好看、可复制的静态页面。Windows `.scr` 屏保或 WebView2 包装器属于后续 V2，最好在这个页面实际使用满意后再做。
+
+
+## 效果展示 - 自由切换主题与个性化调整
+![image.png](https://raw.gitcode.com/user-images/assets/10147290/407b45d7-870b-496a-aeca-3ebb8ebfbeb3/image.png 'image.png')
+![image.png](https://raw.gitcode.com/user-images/assets/10147290/77c3fa6e-8902-45d5-88f2-14a6951d2ccc/image.png 'image.png')
