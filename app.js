@@ -64,7 +64,7 @@ const elements = {
 };
 
 let settings = loadSettings();
-let clockTimer = 0;
+let clockFrame = 0;
 let idleTimer = 0;
 let driftTimer = 0;
 let controlsPinnedHidden = false;
@@ -167,24 +167,36 @@ function renderStyledTime(text) {
 function renderClock() {
   const now = new Date();
   const text = formatTime(now, settings);
+
+  if (text === lastRenderedText) {
+    elements.date.textContent = formatDate(now);
+    return;
+  }
+
   renderStyledTime(text);
   elements.date.textContent = formatDate(now);
   lastRenderedText = text;
 }
 
-function scheduleClock() {
-  window.clearTimeout(clockTimer);
-  renderClock();
+function stopClock() {
+  if (!clockFrame) return;
+  window.cancelAnimationFrame(clockFrame);
+  clockFrame = 0;
+}
 
-  if (settings.showSeconds) {
-    const delay = 1000 - new Date().getMilliseconds();
-    clockTimer = window.setTimeout(scheduleClock, delay);
+function tickClock() {
+  renderClock();
+  clockFrame = window.requestAnimationFrame(tickClock);
+}
+
+function scheduleClock() {
+  stopClock();
+
+  if (document.hidden) {
     return;
   }
 
-  const now = new Date();
-  const delay = (60 - now.getSeconds()) * 1000 - now.getMilliseconds();
-  clockTimer = window.setTimeout(scheduleClock, delay);
+  tickClock();
 }
 
 function applySettings() {
@@ -392,6 +404,7 @@ window.addEventListener("keydown", (event) => {
 
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) {
+    stopClock();
     window.clearInterval(driftTimer);
     return;
   }
